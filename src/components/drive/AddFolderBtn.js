@@ -23,10 +23,10 @@ export default function AddFolderBtn({ currentFolder }) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    if (!currentFolder) return;
+    if (currentFolder == null) return;
 
     database.folders.add({
-      name,
+      name: name,
       parentId: currentFolder.id,
       userId: currentUser.uid,
       // path,

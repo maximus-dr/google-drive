@@ -2,12 +2,15 @@ import { faFolderPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react'
 import { Button, Form, Modal } from 'react-bootstrap';
+import { database } from './../../firebase';
+import { useAuth } from './../../contexts/AuthContext';
 
 
-export default function AddFolderBtn() {
+export default function AddFolderBtn({ currentFolder }) {
 
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
+  const { currentUser } = useAuth();
 
   function openModal() {
     setOpen(true);
@@ -19,7 +22,16 @@ export default function AddFolderBtn() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    // create a folder in the database
+
+    if (!currentFolder) return;
+
+    database.folders.add({
+      name,
+      parentId: currentFolder.id,
+      userId: currentUser.uid,
+      // path,
+      createdAt: database.getCurrentTimestamp()
+    });
     setName('');
     closeModal();
   }
